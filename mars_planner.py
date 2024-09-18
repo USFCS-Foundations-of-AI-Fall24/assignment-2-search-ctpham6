@@ -25,12 +25,12 @@ class RoverState :
         self.prev = None
 
     def __eq__(self, other):
-        if (self.loc == other.loc or self.sample_extracted == other.sample_extracted or
-                self.holding_sample == other.holding_sample or self.charged == other.charged or
+        if (self.loc == other.loc and self.sample_extracted == other.sample_extracted and
+                self.holding_sample == other.holding_sample and self.charged == other.charged and
                 self.prev == other.prev):
-            return true
+            return True
         else :
-            return false
+            return False
 
 
     def __repr__(self):
