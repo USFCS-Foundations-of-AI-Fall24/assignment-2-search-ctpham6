@@ -128,21 +128,36 @@ def sample_goal(state) :
     return state.loc == "sample"
 
 def mission_complete(state) :
-    if (state.charged == True and state.charged == True and state.holding_sample == False and
+    if (state.charged == True and state.holding_sample == False and
             state.prev.holding_sample == True):
         return True
 
 
 if __name__=="__main__" :
     s = RoverState()
+    # These conditions force the search to solve a specific sub problem
+    # This is done by eliminating all the work to do except for one
     s_prev = RoverState(holding_sample = True)
     s_move_sample_goal = RoverState(charged = True, holding_tool = True)
-    s_remove_sample_goal = RoverState(sample_extracted = True)
+    s_remove_sample_goal = RoverState(charged = True, sample_extracted = True)
     s_return_charger_goal = RoverState(prev = s_prev)
     result_breadth = breadth_first_search(s, action_list, mission_complete)
-    print("Default breadth first search: " + result_breadth)
+    print("Default - breadth first search: " + str(result_breadth))
+    print("--------------------------------------------")
+    print("Move To Sample - breadth first search: ")
+    print("--------------------------------------------")
+    print("Remove Sample - breadth first search: ")
+    print("--------------------------------------------")
+    print("Return To Charger - breadth first search: ")
+    print("--------------------------------------------")
     result_depth = depth_first_search(s, action_list, mission_complete)
-    print("Default depth first search: " + result_depth)
+    print("Default depth first search: " + str(result_depth))
+    print("--------------------------------------------")
+    print("Move To Sample - depth first search: ")
+    print("--------------------------------------------")
+    print("Remove Sample - depth first search: ")
+    print("--------------------------------------------")
+    print("Return To Charger - depth first search: ")
 
 
 
