@@ -19,18 +19,19 @@ from search_algorithms import depth_first_search
 
 class RoverState :
     def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False,
-                 prev=None):
+                 prev=None, sample_dropped_off = False):
         self.loc = loc
         self.sample_extracted = sample_extracted
         self.holding_sample = holding_sample
         self.charged = charged
         self.prev = prev
         self.holding_tool = holding_tool
+        self.sample_dropped_off = sample_dropped_off
 
     def __eq__(self, other):
         if (self.loc == other.loc and self.sample_extracted == other.sample_extracted and
                 self.holding_sample == other.holding_sample and self.charged == other.charged and
-                self.holding_tool == other.holding_tool):
+                self.holding_tool == other.holding_tool and self.sample_dropped_off == other.sample_dropped_off):
             return True
         else :
             return False
@@ -40,7 +41,9 @@ class RoverState :
         return (f"Location: {self.loc}\n" +
                 f"Sample Extracted?: {self.sample_extracted}\n"+
                 f"Holding Sample?: {self.holding_sample}\n" +
-                f"Charged? {self.charged}")
+                f"Charged? {self.charged}\n" +
+                f"Holding Tool?: {self.holding_tool}\n" +
+                f"Sample Dropped Off?: {self.sample_dropped_off}")
 
     def __hash__(self):
         return self.__repr__().__hash__()
@@ -61,7 +64,7 @@ class RoverState :
 def move_to_sample(state) :
     r2 = deepcopy(state)
     r2.loc = "sample"
-    r2.prev=state
+    r2.prev = state
     return r2
 
 def move_to_station(state) :
@@ -90,7 +93,8 @@ def drop_tool(state) :
 
 def use_tool(state) :
     r2 = deepcopy(state)
-    r2.sample_extracted = True
+    if state.holding_tool and state.loc == "sample":
+        r2.sample_extracted = True
     r2.prev = state
     return r2
 
@@ -103,14 +107,15 @@ def pick_up_sample(state) :
 
 def drop_sample(state) :
     r2 = deepcopy(state)
-    if state.sample_extracted and state.loc == "station":
+    if state.holding_sample and state.loc == "station":
         r2.holding_sample = False
+        r2.sample_dropped_off = True
     r2.prev = state
     return r2
 
 def charge(state) :
     r2 = deepcopy(state)
-    if state.sample_extracted and state.loc == "sample":
+    if state.sample_dropped_off and state.loc == "battery":
         r2.charged = True
     r2.prev = state
     return r2
@@ -131,13 +136,14 @@ def sample_goal(state) :
 def mission_complete(state, sub_problem = False) :
     if sub_problem :
         if sub_problem == "move_to_sample" :
-            return state.charged == True and state.loc == "sample"
+            return state.loc == "sample"
         elif sub_problem == "remove_sample" :
-            return state.charged == True and state.sample_extracted == True
+            return state.sample_extracted == True
         elif sub_problem == "return_to_charger" :
-            return state.charged == True
+            return state.loc == "battery"
     else :
-        return state.charged == True and state.loc == "battery" and state.sample_extracted == True
+        return (state.charged == True and state.loc == "battery" and state.holding_sample == False and
+                state.sample_extracted == True)
 
 
 if __name__=="__main__" :
@@ -146,45 +152,45 @@ if __name__=="__main__" :
     # These conditions force the search to solve a specific sub problem
     # This is done by eliminating all the work to do except for one
     s_prev = RoverState(holding_sample = True)
-    s_move_sample_goal = RoverState(charged = True, holding_tool = True)
-    s_remove_sample_goal = RoverState(charged = True, sample_extracted = True)
-    s_return_charger_goal = RoverState(prev = s_prev)
+    s_move_sample_goal = RoverState()
+    s_remove_sample_goal = RoverState(loc = "sample")
+    s_return_charger_goal = RoverState(loc = "station", sample_extracted = True)
 
     print("Default Condition Breadth")
     result_breadth = breadth_first_search(s, action_list, mission_complete)
-    print(result_breadth)
+    #print(result_breadth)
     print("--------------------------------------------")
-    print("Move To Sample Goal")
-    move_sample_goal_breadth = breadth_first_search(s_move_sample_goal, action_list, mission_complete,
-                                                    "move_to_sample")
-    print(move_sample_goal_breadth)
-    print("--------------------------------------------")
-    print("Remove Sample Goal")
-    remove_sample_goal_breadth = breadth_first_search(s_remove_sample_goal, action_list, mission_complete,
-                                                      "remove_sample")
-    print(remove_sample_goal_breadth)
-    print("--------------------------------------------")
-    print("Move To Battery Goal")
-    return_to_charger_goal_breadth = breadth_first_search(s_return_charger_goal, action_list, mission_complete,
-                                                          "return_to_charger")
-    print(return_to_charger_goal_breadth)
-    print("--------------------------------------------")
-
-    print("Default Condition Depth")
-    result_depth = depth_first_search(s, action_list, mission_complete)
-    print(result_depth)
-    print("--------------------------------------------")
-    print("Move To Sample Goal")
-    move_sample_goal_depth = breadth_first_search(s_move_sample_goal, action_list, mission_complete,
-                                                  "move_to_sample")
-    print(move_sample_goal_depth)
-    print("--------------------------------------------")
-    print("Remove Sample Goal")
-    remove_sample_goal_depth = breadth_first_search(s_remove_sample_goal, action_list, mission_complete,
-                                                      "remove_sample")
-    print(remove_sample_goal_depth)
-    print("--------------------------------------------")
-    print("Move To Battery Goal")
-    return_to_charger_goal_depth = breadth_first_search(s_return_charger_goal, action_list, mission_complete,
-                                                  "return_to_charger")
-    print(return_to_charger_goal_depth)
+    # print("Move To Sample Goal")
+    # move_sample_goal_breadth = breadth_first_search(s_move_sample_goal, action_list, mission_complete,
+    #                                                 "move_to_sample")
+    # print(move_sample_goal_breadth)
+    # print("--------------------------------------------")
+    # print("Remove Sample Goal")
+    # remove_sample_goal_breadth = breadth_first_search(s_remove_sample_goal, action_list, mission_complete,
+    #                                                   "remove_sample")
+    # print(remove_sample_goal_breadth)
+    # print("--------------------------------------------")
+    # print("Move To Battery Goal")
+    # return_to_charger_goal_breadth = breadth_first_search(s_return_charger_goal, action_list, mission_complete,
+    #                                                       "return_to_charger")
+    # print(return_to_charger_goal_breadth)
+    # print("--------------------------------------------")
+    #
+    # print("Default Condition Depth")
+    # result_depth = depth_first_search(s, action_list, mission_complete)
+    # print(result_depth)
+    # print("--------------------------------------------")
+    # print("Move To Sample Goal")
+    # move_sample_goal_depth = breadth_first_search(s_move_sample_goal, action_list, mission_complete,
+    #                                               "move_to_sample")
+    # print(move_sample_goal_depth)
+    # print("--------------------------------------------")
+    # print("Remove Sample Goal")
+    # remove_sample_goal_depth = breadth_first_search(s_remove_sample_goal, action_list, mission_complete,
+    #                                                   "remove_sample")
+    # print(remove_sample_goal_depth)
+    # print("--------------------------------------------")
+    # print("Move To Battery Goal")
+    # return_to_charger_goal_depth = breadth_first_search(s_return_charger_goal, action_list, mission_complete,
+    #                                               "return_to_charger")
+    # print(return_to_charger_goal_depth)
