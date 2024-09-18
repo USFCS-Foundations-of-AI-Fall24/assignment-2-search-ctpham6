@@ -3,7 +3,7 @@ from collections import deque
 
 
 ## We will append tuples (state, "action") in the search queue
-def breadth_first_search(startState, action_list, goal_test, use_closed_list=True) :
+def breadth_first_search(startState, action_list, goal_test, use_closed_list=True, subproblem=False) :
     search_queue = deque()
     closed_list = {}
     states_generated = 0
@@ -15,7 +15,7 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
         ## this is a (state, "action") tuple
         next_state = search_queue.popleft()
         states_generated += 1
-        if goal_test(next_state[0]):
+        if goal_test(next_state[0], subproblem):
             print("Goal found")
             print(next_state)
             ptr = next_state[0]
