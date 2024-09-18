@@ -49,11 +49,9 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
         check_depth_limit_reached = True
     while len(search_queue) > 0 :
         ## this is a (state, "action") tuple
-        if check_depth_limit_reached :
-            if depth > limit :
-                break
         next_state = search_queue.pop()
         states_generated += 1
+        depth += 1
         if goal_test(next_state[0]):
             print("Goal found")
             print(next_state)
@@ -64,14 +62,22 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
             print("States Generated: " + str(states_generated))
             return next_state
         else :
-            successors = next_state[0].successors(action_list)
-            if use_closed_list :
-                successors = [item for item in successors
-                                    if item[0] not in closed_list]
-                for s in successors :
-                    closed_list[s[0]] = True
-            search_queue.extend(successors)
-        depth += 1
+            if check_depth_limit_reached :
+                # Checks to see if going another depth is within the limit
+                if depth + 1 <= limit:
+                    successors = next_state[0].successors(action_list)
+                    if use_closed_list:
+                        successors = [item for item in successors
+                                      if item[0] not in closed_list]
+                        for s in successors:
+                            closed_list[s[0]] = True
+                    search_queue.extend(successors)
+            else :
+                successors = next_state[0].successors(action_list)
+                if use_closed_list :
+                    successors = [item for item in successors
+                                        if item[0] not in closed_list]
+                    for s in successors :
+                        closed_list[s[0]] = True
+                search_queue.extend(successors)
     print("States Generated: " + str(states_generated))
-## add iterative deepening search here
-
