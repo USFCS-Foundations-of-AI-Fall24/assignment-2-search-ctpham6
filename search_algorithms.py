@@ -17,11 +17,12 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
         states_generated += 1
         if goal_test(next_state[0], subproblem):
             print("Goal found")
-            print(next_state)
+            print("States Generated: " + str(states_generated))
+            #print(next_state)
             ptr = next_state[0]
             while ptr is not None :
                 ptr = ptr.prev
-                print(ptr)
+                #print(ptr)
             return next_state
         else :
             successors = next_state[0].successors(action_list)
@@ -35,7 +36,7 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
 ### Note the similarity to BFS - the only difference is the search queue
 
 ## use the limit parameter to implement depth-limited search
-def depth_first_search(startState, action_list, goal_test, use_closed_list=True,limit=0) :
+def depth_first_search(startState, action_list, goal_test, use_closed_list=True,limit=0,subproblem=False) :
     search_queue = deque()
     closed_list = {}
     states_generated = 0
@@ -52,14 +53,14 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
         next_state = search_queue.pop()
         states_generated += 1
         depth += 1
-        if goal_test(next_state[0]):
+        if goal_test(next_state[0], subproblem):
             print("Goal found")
-            print(next_state)
+            print("States Generated: " + str(states_generated))
+            #print(next_state)
             ptr = next_state[0]
             while ptr is not None :
                 ptr = ptr.prev
-                print(ptr)
-            print("States Generated: " + str(states_generated))
+                #print(ptr)
             return next_state
         else :
             if check_depth_limit_reached :
