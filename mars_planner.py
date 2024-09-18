@@ -24,7 +24,6 @@ class RoverState :
         self.charged=charged
         self.prev = None
 
-    ## you do this.
     def __eq__(self, other):
         if (self.loc == other.loc or self.sample_extracted == other.sample_extracted or
                 self.holding_sample == other.holding_sample or self.charged == other.charged or
@@ -110,7 +109,9 @@ def sample_goal(state) :
     return state.loc == "sample"
 
 def mission_complete(state) :
-    pass
+    if (state.charged == True and state.charged == True and state.holding_sample == False and
+            state.prev.holding_sample == True):
+        return True
 
 
 if __name__=="__main__" :
