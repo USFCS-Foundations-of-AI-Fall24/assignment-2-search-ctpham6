@@ -18,12 +18,12 @@ from search_algorithms import breadth_first_search
 from search_algorithms import depth_first_search
 
 class RoverState :
-    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False):
+    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False, prev=None):
         self.loc = loc
         self.sample_extracted = sample_extracted
         self.holding_sample = holding_sample
         self.charged = charged
-        self.prev = None
+        self.prev = prev
         self.holding_tool = holding_tool
 
     def __eq__(self, other):
@@ -135,13 +135,14 @@ def mission_complete(state) :
 
 if __name__=="__main__" :
     s = RoverState()
-    # print("s =" + str(s))
-    # print("action_list =" + str(action_list))
-    # print("mission_complete =" + str(mission_complete))
+    s_prev = RoverState(holding_sample = True)
+    s_move_sample_goal = RoverState(charged = True, holding_tool = True)
+    s_remove_sample_goal = RoverState(sample_extracted = True)
+    s_return_charger_goal = RoverState(prev = s_prev)
     result_breadth = breadth_first_search(s, action_list, mission_complete)
-    print(result_breadth)
-    # result_depth = depth_first_search(s, action_list, mission_complete)
-    # print(result_depth)
+    print("Default breadth first search: " + result_breadth)
+    result_depth = depth_first_search(s, action_list, mission_complete)
+    print("Default depth first search: " + result_depth)
 
 
 
