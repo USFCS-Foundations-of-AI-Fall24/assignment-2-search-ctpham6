@@ -150,25 +150,41 @@ if __name__=="__main__" :
     s_remove_sample_goal = RoverState(charged = True, sample_extracted = True)
     s_return_charger_goal = RoverState(prev = s_prev)
 
+    print("Default Condition Breadth")
     result_breadth = breadth_first_search(s, action_list, mission_complete)
+    print(result_breadth)
     print("--------------------------------------------")
+    print("Move To Sample Goal")
     move_sample_goal_breadth = breadth_first_search(s_move_sample_goal, action_list, mission_complete,
                                                     "move_to_sample")
+    print(move_sample_goal_breadth)
     print("--------------------------------------------")
+    print("Remove Sample Goal")
     remove_sample_goal_breadth = breadth_first_search(s_remove_sample_goal, action_list, mission_complete,
                                                       "remove_sample")
+    print(remove_sample_goal_breadth)
     print("--------------------------------------------")
+    print("Move To Battery Goal")
     return_to_charger_goal_breadth = breadth_first_search(s_return_charger_goal, action_list, mission_complete,
                                                           "return_to_charger")
+    print(return_to_charger_goal_breadth)
     print("--------------------------------------------")
 
+    print("Default Condition Depth")
     result_depth = depth_first_search(s, action_list, mission_complete)
+    print(result_depth)
     print("--------------------------------------------")
+    print("Move To Sample Goal")
     move_sample_goal_depth = breadth_first_search(s_move_sample_goal, action_list, mission_complete,
                                                   "move_to_sample")
+    print(move_sample_goal_depth)
     print("--------------------------------------------")
+    print("Remove Sample Goal")
     remove_sample_goal_depth = breadth_first_search(s_remove_sample_goal, action_list, mission_complete,
                                                       "remove_sample")
+    print(remove_sample_goal_depth)
     print("--------------------------------------------")
+    print("Move To Battery Goal")
     return_to_charger_goal_depth = breadth_first_search(s_return_charger_goal, action_list, mission_complete,
                                                   "return_to_charger")
+    print(return_to_charger_goal_depth)
