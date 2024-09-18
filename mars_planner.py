@@ -18,7 +18,8 @@ from search_algorithms import breadth_first_search
 from search_algorithms import depth_first_search
 
 class RoverState :
-    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False, prev=None):
+    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False,
+                 prev=None):
         self.loc = loc
         self.sample_extracted = sample_extracted
         self.holding_sample = holding_sample
@@ -127,13 +128,23 @@ def station_goal(state) :
 def sample_goal(state) :
     return state.loc == "sample"
 
-def mission_complete(state) :
-    if (state.charged == True and state.holding_sample == False and
-            state.prev.holding_sample == True):
-        return True
+def mission_complete(state, sub_problem = False) :
+    if sub_problem :
+        if sub_problem == "move_to_sample" :
+            return (state.charged == True and state.holding_sample == False and
+                    state.prev.holding_sample == True and state.loc == "sample")
+        elif sub_problem == "remove_sample" :
+            return state.charged == True and state.holding_sample == False
+        elif sub_problem == "return_to_charger" :
+            return (state.charged == True and state.holding_sample == False and
+                    state.prev.holding_sample == True and state.loc == "battery")
+    else :
+        return (state.charged == True and state.loc == "battery" and state.holding_sample == False and
+                state.prev.holding_sample == True)
 
 
 if __name__=="__main__" :
+
     s = RoverState()
     # These conditions force the search to solve a specific sub problem
     # This is done by eliminating all the work to do except for one
@@ -141,23 +152,36 @@ if __name__=="__main__" :
     s_move_sample_goal = RoverState(charged = True, holding_tool = True)
     s_remove_sample_goal = RoverState(charged = True, sample_extracted = True)
     s_return_charger_goal = RoverState(prev = s_prev)
+
     result_breadth = breadth_first_search(s, action_list, mission_complete)
+    move_sample_goal_breadth = breadth_first_search(s_move_sample_goal, action_list, mission_complete,
+                                                    "move_to_sample")
+    remove_sample_goal_breadth = breadth_first_search(s_remove_sample_goal, action_list, mission_complete,
+                                                      "remove_sample")
+    return_to_charger_goal_breadth = breadth_first_search(s_return_charger_goal, action_list, mission_complete,
+                                                          "return_to_charger")
+
     print("Default - breadth first search: " + str(result_breadth))
     print("--------------------------------------------")
-    print("Move To Sample - breadth first search: ")
+    print("Move To Sample - breadth first search: " + str(move_sample_goal_breadth))
     print("--------------------------------------------")
-    print("Remove Sample - breadth first search: ")
+    print("Remove Sample - breadth first search: " + str(remove_sample_goal_breadth))
     print("--------------------------------------------")
-    print("Return To Charger - breadth first search: ")
+    print("Return To Charger - breadth first search: " + str(return_to_charger_goal_breadth))
     print("--------------------------------------------")
+
     result_depth = depth_first_search(s, action_list, mission_complete)
+    move_sample_goal_depth = breadth_first_search(s_move_sample_goal, action_list, mission_complete,
+                                                  "move_to_sample")
+    remove_sample_goal_depth = breadth_first_search(s_remove_sample_goal, action_list, mission_complete,
+                                                      "remove_sample")
+    return_to_charger_goal_depth = breadth_first_search(s_return_charger_goal, action_list, mission_complete,
+                                                  "return_to_charger")
+
     print("Default depth first search: " + str(result_depth))
     print("--------------------------------------------")
-    print("Move To Sample - depth first search: ")
+    print("Move To Sample - depth first search: " + str(move_sample_goal_depth))
     print("--------------------------------------------")
-    print("Remove Sample - depth first search: ")
+    print("Remove Sample - depth first search: " + str(remove_sample_goal_depth))
     print("--------------------------------------------")
-    print("Return To Charger - depth first search: ")
-
-
-
+    print("Return To Charger - depth first search: " + str(return_to_charger_goal_depth))
