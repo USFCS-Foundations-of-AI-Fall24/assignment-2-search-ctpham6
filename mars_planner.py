@@ -131,13 +131,11 @@ def sample_goal(state) :
 def mission_complete(state, sub_problem = False) :
     if sub_problem :
         if sub_problem == "move_to_sample" :
-            return (state.charged == True and state.holding_sample == False and
-                    state.prev.holding_sample == True and state.loc == "sample")
+            return state.charged == True and state.loc == "sample"
         elif sub_problem == "remove_sample" :
-            return state.charged == True and state.holding_sample == False
+            return state.charged == True and state.sample_extracted == True
         elif sub_problem == "return_to_charger" :
-            return (state.charged == True and state.holding_sample == False and
-                    state.prev.holding_sample == True and state.loc == "battery")
+            return state.charged == True
     else :
         return state.charged == True and state.loc == "battery" and state.sample_extracted == True
 
