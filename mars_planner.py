@@ -29,13 +29,9 @@ class RoverState :
         self.sample_dropped_off = sample_dropped_off
 
     def __eq__(self, other):
-        if (self.loc == other.loc and self.sample_extracted == other.sample_extracted and
+        return (self.loc == other.loc and self.sample_extracted == other.sample_extracted and
                 self.holding_sample == other.holding_sample and self.charged == other.charged and
-                self.holding_tool == other.holding_tool and self.sample_dropped_off == other.sample_dropped_off):
-            return True
-        else :
-            return False
-
+                self.holding_tool == other.holding_tool and self.sample_dropped_off == other.sample_dropped_off)
 
     def __repr__(self):
         return (f"Location: {self.loc}\n" +
@@ -140,7 +136,7 @@ def mission_complete(state, sub_problem = False) :
         elif sub_problem == "remove_sample" :
             return state.sample_extracted
         elif sub_problem == "return_to_charger" :
-            return state.loc == "battery"
+            return state.loc == "battery" and state.sample_dropped_off
     else :
         return (state.charged == True and state.loc == "battery" and state.holding_sample == False and
                 state.sample_extracted == True)
@@ -151,10 +147,9 @@ if __name__=="__main__" :
     s = RoverState()
     # These conditions force the search to solve a specific sub problem
     # This is done by eliminating all the work to do except for one
-    s_prev = RoverState(holding_sample = True)
     s_move_sample_goal = RoverState()
     s_remove_sample_goal = RoverState(loc = "sample")
-    s_return_charger_goal = RoverState(loc = "station", sample_extracted = True)
+    s_return_charger_goal = RoverState(loc = "sample", sample_extracted = True)
 
     print("Default Condition Breadth")
     result_breadth = breadth_first_search(s, action_list, mission_complete)
