@@ -50,4 +50,9 @@ def sld(state) :
 ## you implement this. Open the file filename, read in each line,
 ## construct a Graph object and assign it to self.mars_graph().
 def read_mars_graph(filename):
-    pass
+
+    map_file = open(filename)
+    if not map_file:
+        print("Invalid Map File")
+        return
+    print(mars_map)
