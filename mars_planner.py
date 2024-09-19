@@ -18,8 +18,9 @@ from search_algorithms import breadth_first_search
 from search_algorithms import depth_first_search
 
 class RoverState :
+
     def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False,
-                 prev=None, sample_dropped_off = False):
+                 prev=None, sample_dropped_off = False, depth = 1):
         self.loc = loc
         self.sample_extracted = sample_extracted
         self.holding_sample = holding_sample
@@ -51,7 +52,6 @@ class RoverState :
         ## add the name of the function also
         succ = [(item(self), item.__name__) for item in list_of_actions]
         ## remove actions that have no effect
-
         succ = [item for item in succ if not item[0] == self]
         return succ
 
