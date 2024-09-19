@@ -1,7 +1,5 @@
 from collections import deque
 
-
-
 ## We will append tuples (state, "action") in the search queue
 def breadth_first_search(startState, action_list, goal_test, use_closed_list=True, subproblem=False) :
     search_queue = deque()
@@ -79,3 +77,16 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
                     closed_list[s[0]] = True
             search_queue.extend(successors)
     print("States Generated: " + str(states_generated))
+
+def a_star(start_point="1,1") :
+
+    def shortest_line_distance(p1_x=1, p1_y=1) :
+
+        # p2 is always (1,1)
+        try :
+            return sqrt((p1_x - 1)^2 + (p1_y - 1)^2)
+        except :
+            print("Usage: shortest_line_distance(p1) where p1 = 'x,y'")
+            return -1
+
+    heuristic = shortest_line_distance(int(start_point[0]), int(start_point[2]))
