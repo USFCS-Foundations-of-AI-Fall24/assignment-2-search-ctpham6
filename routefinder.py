@@ -7,6 +7,8 @@ class map_state() :
     ## f = total estimated cost
     ## g = cost so far
     ## h = estimated cost to goal
+    ## location = "1,1" means charger, the start point
+    ## location = "8,8" means sample, the destination
     def __init__(self, location="", mars_graph=None,
                  prev_state=None, g=0,h=0):
         self.location = location
@@ -35,12 +37,23 @@ class map_state() :
         return self.location == '1,1'
 
 
-def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
+def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = False) :
+
     search_queue = PriorityQueue()
     closed_list = {}
     search_queue.put(start_state)
-    ## you do the rest.
-
+    while queue.qsize(search_queue) != 0 :
+        next_state = search_queue.get()
+        if goal_test(next_state) :
+            print("goal found")
+        else :
+            for edge in next_state.mars_graph.edges:
+                if ucs :
+                    state_to_enqueue = map_state(location=edge, mars_graph=next_state.mars_graph, prev_state=next_state,
+                                                 g=next_state.g + 1, h=h1(next_state))
+                else :
+                    state_to_enqueue = map_state(location=edge, mars_graph=next_state.mars_graph, prev_state=next_state,
+                                                 g=next_state.g + 1, h=h1(next_state))
 
 ## default heuristic - we can use this to implement uniform cost search
 def h1(state) :
@@ -48,10 +61,10 @@ def h1(state) :
 
 ## you do this - return the straight-line distance between the state and (1,1)
 def sld(state) :
-    sqt(a^ + b2)
+    p1_x = int(state.location[0])
+    p1_y = int(state.location[2])
+    return sqrt((p1_x - 1)^2 + (p1_y - 1)^2)
 
-## you implement this. Open the file filename, read in each line,
-## construct a Graph object and assign it to self.mars_graph().
 def read_mars_graph(filename):
 
     try :
@@ -64,7 +77,7 @@ def read_mars_graph(filename):
             edge_array.pop(0)
             mars_graph.add_node(node_string)
             for edge_string in edge_array:
-                edge = Edge(src = node_string, dest = edge_string, val = 1)
+                edge = Edge(src = node.value, dest = edge_string, val = 1)
                 mars_graph.add_edge(edge)
         map_file.close()
         return map_state(mars_graph = mars_graph)
@@ -72,4 +85,11 @@ def read_mars_graph(filename):
         print("Invalid Map File")
         return None
 
-mars_map_state = map_state(mars_graph = read_mars_graph("MarsMap.txt"))
+def mission_complete(state, sub_problem = False) :
+
+    return state.location == "8,8"
+
+if __name__=="__main__" :
+
+    mars_map_state = map_state(location="1,1", mars_graph = read_mars_graph("MarsMap.txt"))
+    a_star(mars_map_state, sld, mission_complete)
