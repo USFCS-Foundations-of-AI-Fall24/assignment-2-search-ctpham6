@@ -1,4 +1,7 @@
 from queue import PriorityQueue
+from Graph import Graph
+from Graph import Node
+from Graph import Edge
 
 class map_state() :
     ## f = total estimated cost
@@ -51,8 +54,22 @@ def sld(state) :
 ## construct a Graph object and assign it to self.mars_graph().
 def read_mars_graph(filename):
 
-    map_file = open(filename)
-    if not map_file:
+    try :
+        map_file = open(filename)
+        mars_graph = Graph()
+        for line in map_file:
+            node_string = line.split(":")[0]
+            node = Node(val = node_string)
+            edge_array = line.split(" ")
+            edge_array.pop(0)
+            mars_graph.add_node(node_string)
+            for edge_string in edge_array:
+                edge = Edge(src = node_string, dest = edge_string, val = 1)
+                mars_graph.add_edge(edge)
+        map_file.close()
+        return map_state(mars_graph = mars_graph)
+    except :
         print("Invalid Map File")
-        return
-    print(mars_map)
+        return None
+
+mars_map_state = map_state(mars_graph = read_mars_graph("MarsMap.txt"))
