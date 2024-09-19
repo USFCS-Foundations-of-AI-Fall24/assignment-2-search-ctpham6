@@ -18,11 +18,13 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
         if goal_test(next_state[0], subproblem):
             print("Goal found")
             print("States Generated: " + str(states_generated))
-            #print(next_state)
+            print(next_state)
+            print("----------")
             ptr = next_state[0]
             while ptr is not None :
                 ptr = ptr.prev
-                #print(ptr)
+                print(ptr)
+                print("----------")
             return next_state
         else :
             successors = next_state[0].successors(action_list)
@@ -56,11 +58,12 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
         if goal_test(next_state[0], subproblem):
             print("Goal found")
             print("States Generated: " + str(states_generated))
-            #print(next_state)
+            print(next_state)
             ptr = next_state[0]
             while ptr is not None :
                 ptr = ptr.prev
-                #print(ptr)
+                print(ptr)
+                print("----------")
             return next_state
         else :
             if check_depth_limit_reached :
