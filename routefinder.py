@@ -42,18 +42,58 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = Fal
     search_queue = PriorityQueue()
     closed_list = {}
     search_queue.put(start_state)
-    while queue.qsize(search_queue) != 0 :
-        next_state = search_queue.get()
+    next_state = search_queue.get()
+    while next_state :
         if goal_test(next_state) :
             print("goal found")
         else :
-            for edge in next_state.mars_graph.edges:
+            for edge in next_state.mars_graph.get_edges:
                 if ucs :
                     state_to_enqueue = map_state(location=edge, mars_graph=next_state.mars_graph, prev_state=next_state,
                                                  g=next_state.g + 1, h=h1(next_state))
                 else :
                     state_to_enqueue = map_state(location=edge, mars_graph=next_state.mars_graph, prev_state=next_state,
-                                                 g=next_state.g + 1, h=h1(next_state))
+                                                 g=next_state.g + 1, h=sld(next_state))
+        next_state = search_queue.get()
+    heuristic = shortest_line_distance(int(start_point[0]), int(start_point[2]))
+    states_generated = 0
+    check_depth_limit_reached = False
+    depth = 0
+
+    search_queue.append((startState, ""))
+    if use_closed_list:
+        closed_list[startState] = True
+    if limit > 0:
+        check_depth_limit_reached = True
+    while len(search_queue) > 0:
+        ## this is a (state, "action") tuple
+        next_state = search_queue.pop()
+        states_generated += 1
+        depth += 1
+        if (check_depth_limit_reached and depth > limit):
+            break
+        if goal_test(next_state[0], subproblem):
+            if (check_depth_limit_reached):
+                print("Goal found at depth of " + str(depth))
+            else:
+                print("Goal found")
+            print("States Generated: " + str(states_generated))
+            print(next_state)
+            ptr = next_state[0]
+            while ptr is not None:
+                ptr = ptr.prev
+                print("----------")
+                print(ptr)
+            return next_state
+        else:
+            successors = next_state[0].successors(action_list)
+            if use_closed_list:
+                successors = [item for item in successors
+                              if item[0] not in closed_list]
+                for s in successors:
+                    closed_list[s[0]] = True
+            search_queue.extend(successors)
+    print("States Generated: " + str(states_generated))
 
 ## default heuristic - we can use this to implement uniform cost search
 def h1(state) :
