@@ -34,18 +34,18 @@ Antenna8 = model.NewIntVar(0,2, "A8")
 Antenna9 = model.NewIntVar(0,2, "A9")
 
 ## add edges
-model.Add(SF != Alameda)
-model.Add(SF != Marin)
-model.Add(SF != SanMateo)
-model.Add(ContraCosta != Alameda)
-model.Add(Alameda != SanMateo)
-model.Add(Alameda != SantaClara)
-model.Add(SantaClara != SanMateo)
-model.Add(Marin != Sonoma)
-model.Add(Sonoma != Napa)
-model.Add(Napa != Solano)
-model.Add(Solano != ContraCosta)
-model.Add(ContraCosta != Marin)
+# model.Add(SF != Alameda)
+# model.Add(SF != Marin)
+# model.Add(SF != SanMateo)
+# model.Add(ContraCosta != Alameda)
+# model.Add(Alameda != SanMateo)
+# model.Add(Alameda != SantaClara)
+# model.Add(SantaClara != SanMateo)
+# model.Add(Marin != Sonoma)
+# model.Add(Sonoma != Napa)
+# model.Add(Napa != Solano)
+# model.Add(Solano != ContraCosta)
+# model.Add(ContraCosta != Marin)
 
 # Antenna 1 is adjacent to 2,3 and 4.
 antenna_model.Add(Antenna1 != Antenna2)
@@ -59,11 +59,16 @@ antenna_model.Add(Antenna2 != Antenna6)
 antenna_model.Add(Antenna3 != Antenna6)
 antenna_model.Add(Antenna3 != Antenna9)
 # Antenna 4 is adjacent to 1, 2, and 5.
+antenna_model.Add(Antenna4 != Antenna2)
 antenna_model.Add(Antenna4 != Antenna5)
 # Antenna 6 is adjacent to 2, 7 and 8
 antenna_model.Add(Antenna6 != Antenna7)
 antenna_model.Add(Antenna6 != Antenna8)
-
+# Antenna 7 is adjacent to 6 and 8
+antenna_model.Add(Antenna7 != Antenna8)
+# Antenna 8 is adjacent to 7 and 9
+antenna_model.Add(Antenna8 != Antenna9)
+# Antenna 9 is adjacent to 3 and 8
 
 status = solver.Solve(model)
 
@@ -80,14 +85,15 @@ antenna_status = antenna_solver.Solve(antenna_model)
 #     print("San Mateo: %s" % colors[solver.Value(SanMateo)])
 #     print("Napa: %s" % colors[solver.Value(Napa)])
 
+print(antenna_status)
 if antenna_status == cp_model.OPTIMAL or antenna_status == cp_model.FEASIBLE:
-    print("A1: %s" % frequencies[solver.Value(Antenna1)])
-    print("A2: %s" % frequencies[solver.Value(Antenna2)])
-    print("A3: %s" % frequencies[solver.Value(Antenna3)])
-    print("A4: %s" % frequencies[solver.Value(Antenna4)])
-    print("A5: %s" % frequencies[solver.Value(Antenna5)])
-    print("A6: %s" % frequencies[solver.Value(Antenna6)])
-    print("A7: %s" % frequencies[solver.Value(Antenna7)])
-    print("A8: %s" % frequencies[solver.Value(Antenna8)])
-    print("A9: %s" % frequencies[solver.Value(Antenna9)])
+    print("A1: %s" % frequencies[antenna_solver.Value(Antenna1)])
+    print("A2: %s" % frequencies[antenna_solver.Value(Antenna2)])
+    print("A3: %s" % frequencies[antenna_solver.Value(Antenna3)])
+    print("A4: %s" % frequencies[antenna_solver.Value(Antenna4)])
+    print("A5: %s" % frequencies[antenna_solver.Value(Antenna5)])
+    print("A6: %s" % frequencies[antenna_solver.Value(Antenna6)])
+    print("A7: %s" % frequencies[antenna_solver.Value(Antenna7)])
+    print("A8: %s" % frequencies[antenna_solver.Value(Antenna8)])
+    print("A9: %s" % frequencies[antenna_solver.Value(Antenna9)])
 
