@@ -45,8 +45,10 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = Fal
     search_queue.put(start_state)
     next_state = search_queue.get()
     states_generated = 0
+    if use_closed_list :
+        closed_list[start_state] = True
     while next_state :
-        states_generated += 1
+        print("Location is: " + str(next_state.location))
         if goal_test(next_state) :
             print("goal found")
             print("States Generated: " + str(states_generated))
@@ -59,7 +61,16 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = Fal
                 else :
                     state_to_enqueue = map_state(location=edge.dest, mars_graph=next_state.mars_graph, prev_state=next_state,
                                                  g=next_state.g + 1, h=sld(next_state))
-                search_queue.put(state_to_enqueue)
+                if use_closed_list :
+                    try :
+                        closed_list[state_to_enqueue]
+                    except :
+                        search_queue.put(state_to_enqueue)
+                        closed_list[state_to_enqueue] = True
+                        states_generated += 1
+                else :
+                    search_queue.put(state_to_enqueue)
+                    states_generated += 1
         next_state = search_queue.get()
     print("goal not found")
     print("States Generated: " + str(states_generated))
@@ -101,4 +112,4 @@ def mission_complete(state, sub_problem = False) :
 if __name__=="__main__" :
 
     mars_map_state = map_state(location="1,1", mars_graph = read_mars_graph("MarsMap.txt"))
-    print(a_star(mars_map_state, sld, mission_complete))
+    a_star(mars_map_state, sld, mission_complete)
