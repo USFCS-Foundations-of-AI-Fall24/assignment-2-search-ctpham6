@@ -12,7 +12,6 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
     while len(search_queue) > 0 :
         ## this is a (state, "action") tuple
         next_state = search_queue.popleft()
-        states_generated += 1
         if goal_test(next_state[0], subproblem):
             print("Goal found")
             print("States Generated: " + str(states_generated))
@@ -30,6 +29,7 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
                 successors = [item for item in successors
                                     if item[0] not in closed_list]
                 for s in successors :
+                    states_generated += 1
                     closed_list[s[0]] = True
             search_queue.extend(successors)
     print("States Generated: " + str(states_generated))
@@ -51,7 +51,6 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
     while len(search_queue) > 0 :
         ## this is a (state, "action") tuple
         next_state = search_queue.pop()
-        states_generated += 1
         depth += 1
         if (check_depth_limit_reached and depth > limit) :
             break
@@ -74,6 +73,7 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
                 successors = [item for item in successors
                                     if item[0] not in closed_list]
                 for s in successors :
+                    states_generated += 1
                     closed_list[s[0]] = True
             search_queue.extend(successors)
     print("States Generated: " + str(states_generated))
