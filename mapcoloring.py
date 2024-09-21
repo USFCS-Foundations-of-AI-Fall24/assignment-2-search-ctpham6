@@ -1,27 +1,27 @@
 from ortools.sat.python import cp_model
 
 # Instantiate model and solver
-model = cp_model.CpModel()
-solver = cp_model.CpSolver()
+# model = cp_model.CpModel()
+# solver = cp_model.CpSolver()
 
 # Instantiate model and solver
 antenna_model = cp_model.CpModel()
 antenna_solver = cp_model.CpSolver()
 
 ## colors: 0: Red, 1: Blue 2: Green
-colors = {0 : 'Red',1:'Blue',2:'Green'}
+# colors = {0 : 'Red',1:'Blue',2:'Green'}
 
 frequencies = {0 : 'f1',1:'f2',2:'f3'}
 
-SF = model.NewIntVar(0,2,'SF')
-Alameda = model.NewIntVar(0,2,'Alameda')
-Marin = model.NewIntVar(0,2,'Marin')
-SanMateo = model.NewIntVar(0,2,'San Mateo')
-SantaClara = model.NewIntVar(0,2,'Santa Clara')
-ContraCosta = model.NewIntVar(0,2,'Contra Costa')
-Solano = model.NewIntVar(0,2,'Solano')
-Napa = model.NewIntVar(0,2,'Napa')
-Sonoma = model.NewIntVar(0,2,'Sonoma')
+# SF = model.NewIntVar(0,2,'SF')
+# Alameda = model.NewIntVar(0,2,'Alameda')
+# Marin = model.NewIntVar(0,2,'Marin')
+# SanMateo = model.NewIntVar(0,2,'San Mateo')
+# SantaClara = model.NewIntVar(0,2,'Santa Clara')
+# ContraCosta = model.NewIntVar(0,2,'Contra Costa')
+# Solano = model.NewIntVar(0,2,'Solano')
+# Napa = model.NewIntVar(0,2,'Napa')
+# Sonoma = model.NewIntVar(0,2,'Sonoma')
 
 Antenna1 = antenna_model.NewIntVar(0,2, "A1")
 Antenna2 = antenna_model.NewIntVar(0,2, "A2")
@@ -70,7 +70,7 @@ antenna_model.Add(Antenna7 != Antenna8)
 antenna_model.Add(Antenna8 != Antenna9)
 # Antenna 9 is adjacent to 3 and 8
 
-status = solver.Solve(model)
+# status = solver.Solve(model)
 
 antenna_status = antenna_solver.Solve(antenna_model)
 
@@ -85,7 +85,6 @@ antenna_status = antenna_solver.Solve(antenna_model)
 #     print("San Mateo: %s" % colors[solver.Value(SanMateo)])
 #     print("Napa: %s" % colors[solver.Value(Napa)])
 
-print(antenna_status)
 if antenna_status == cp_model.OPTIMAL or antenna_status == cp_model.FEASIBLE:
     print("A1: %s" % frequencies[antenna_solver.Value(Antenna1)])
     print("A2: %s" % frequencies[antenna_solver.Value(Antenna2)])
