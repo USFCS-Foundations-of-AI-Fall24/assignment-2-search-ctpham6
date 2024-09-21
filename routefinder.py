@@ -43,9 +43,13 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = Fal
     closed_list = {}
     search_queue.put(start_state)
     next_state = search_queue.get()
+    states_generated = 0
     while next_state :
+        states_generated += 1
         if goal_test(next_state) :
             print("goal found")
+            print("States Generated: " + str(states_generated))
+            return next_state[0]
         else :
             for edge in next_state.mars_graph.get_edges:
                 if ucs :
@@ -54,45 +58,11 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = Fal
                 else :
                     state_to_enqueue = map_state(location=edge, mars_graph=next_state.mars_graph, prev_state=next_state,
                                                  g=next_state.g + 1, h=sld(next_state))
+                search_queue.put(state_to_enqueue)
+                if use_closed_list:
+                    closed_list[startState] = True
         next_state = search_queue.get()
-    heuristic = shortest_line_distance(int(start_point[0]), int(start_point[2]))
-    states_generated = 0
-    check_depth_limit_reached = False
-    depth = 0
-
-    search_queue.append((startState, ""))
-    if use_closed_list:
-        closed_list[startState] = True
-    if limit > 0:
-        check_depth_limit_reached = True
-    while len(search_queue) > 0:
-        ## this is a (state, "action") tuple
-        next_state = search_queue.pop()
-        states_generated += 1
-        depth += 1
-        if (check_depth_limit_reached and depth > limit):
-            break
-        if goal_test(next_state[0], subproblem):
-            if (check_depth_limit_reached):
-                print("Goal found at depth of " + str(depth))
-            else:
-                print("Goal found")
-            print("States Generated: " + str(states_generated))
-            print(next_state)
-            ptr = next_state[0]
-            while ptr is not None:
-                ptr = ptr.prev
-                print("----------")
-                print(ptr)
-            return next_state
-        else:
-            successors = next_state[0].successors(action_list)
-            if use_closed_list:
-                successors = [item for item in successors
-                              if item[0] not in closed_list]
-                for s in successors:
-                    closed_list[s[0]] = True
-            search_queue.extend(successors)
+    print("goal not found")
     print("States Generated: " + str(states_generated))
 
 ## default heuristic - we can use this to implement uniform cost search
@@ -115,12 +85,12 @@ def read_mars_graph(filename):
             node = Node(val = node_string)
             edge_array = line.split(" ")
             edge_array.pop(0)
-            mars_graph.add_node(node_string)
+            mars_graph.add_node(node.value)
             for edge_string in edge_array:
-                edge = Edge(src = node.value, dest = edge_string, val = 1)
+                edge = Edge(src = node.value, dest = edge_string.strip(), val = 1)
                 mars_graph.add_edge(edge)
         map_file.close()
-        return map_state(mars_graph = mars_graph)
+        return mars_graph
     except :
         print("Invalid Map File")
         return None
@@ -132,4 +102,5 @@ def mission_complete(state, sub_problem = False) :
 if __name__=="__main__" :
 
     mars_map_state = map_state(location="1,1", mars_graph = read_mars_graph("MarsMap.txt"))
-    a_star(mars_map_state, sld, mission_complete)
+    print(mars_map_state.mars_graph.get_edges("1,1"))
+    # a_star(mars_map_state, sld, mission_complete)
