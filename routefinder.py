@@ -2,6 +2,7 @@ from queue import PriorityQueue
 from Graph import Graph
 from Graph import Node
 from Graph import Edge
+import math
 
 class map_state() :
     ## f = total estimated cost
@@ -49,18 +50,16 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = Fal
         if goal_test(next_state) :
             print("goal found")
             print("States Generated: " + str(states_generated))
-            return next_state[0]
+            return next_state
         else :
-            for edge in next_state.mars_graph.get_edges:
+            for edge in next_state.mars_graph.get_edges(next_state.location):
                 if ucs :
-                    state_to_enqueue = map_state(location=edge, mars_graph=next_state.mars_graph, prev_state=next_state,
+                    state_to_enqueue = map_state(location=edge.dest, mars_graph=next_state.mars_graph, prev_state=next_state,
                                                  g=next_state.g + 1, h=h1(next_state))
                 else :
-                    state_to_enqueue = map_state(location=edge, mars_graph=next_state.mars_graph, prev_state=next_state,
+                    state_to_enqueue = map_state(location=edge.dest, mars_graph=next_state.mars_graph, prev_state=next_state,
                                                  g=next_state.g + 1, h=sld(next_state))
                 search_queue.put(state_to_enqueue)
-                if use_closed_list:
-                    closed_list[startState] = True
         next_state = search_queue.get()
     print("goal not found")
     print("States Generated: " + str(states_generated))
@@ -73,7 +72,7 @@ def h1(state) :
 def sld(state) :
     p1_x = int(state.location[0])
     p1_y = int(state.location[2])
-    return sqrt((p1_x - 1)^2 + (p1_y - 1)^2)
+    return math.sqrt((p1_x - 1)^2 + (p1_y - 1)^2)
 
 def read_mars_graph(filename):
 
@@ -102,5 +101,4 @@ def mission_complete(state, sub_problem = False) :
 if __name__=="__main__" :
 
     mars_map_state = map_state(location="1,1", mars_graph = read_mars_graph("MarsMap.txt"))
-    print(mars_map_state.mars_graph.get_edges("1,1"))
-    # a_star(mars_map_state, sld, mission_complete)
+    print(a_star(mars_map_state, sld, mission_complete))
