@@ -5,6 +5,7 @@ from Graph import Edge
 import math
 
 class map_state() :
+
     ## f = total estimated cost
     ## g = cost so far
     ## h = estimated cost to goal
@@ -37,15 +38,17 @@ class map_state() :
         return self.location == '1,1'
 
 
-def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = False) :
+def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
 
     search_queue = PriorityQueue()
     closed_list = {}
     search_queue.put(start_state)
     next_state = search_queue.get()
     states_generated = 0
+
     if use_closed_list :
         closed_list[start_state] = True
+    # while the next_state is a valid state. If not, then the priority queue is empty
     while next_state :
         if goal_test(next_state) :
             print("[Goal Found]")
@@ -57,9 +60,12 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = Fal
             print("States Generated: " + str(states_generated))
             return next_state
         else :
+            # Every state after the current one has a cost of the current one + 1
             for edge in next_state.mars_graph.get_edges(next_state.location) :
-                state_to_enqueue = map_state(location=edge.dest, mars_graph=next_state.mars_graph, prev_state=next_state,
-                                                 g=1, h=heuristic_fn(next_state))
+                state_to_enqueue = map_state(location = edge.dest, mars_graph = next_state.mars_graph,
+                                             prev_state = next_state, g = 1,
+                                             h = heuristic_fn(edge.dest))
+                # If there is no entry for the state in the closed_list, then it has been gone over already
                 if use_closed_list :
                     try :
                         closed_list[state_to_enqueue]
@@ -76,13 +82,15 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = Fal
 
 ## default heuristic - we can use this to implement uniform cost search
 def h1(state) :
+
     return 0
 
-## you do this - return the straight-line distance between the state and (1,1)
-def sld(state) :
-    p1_x = int(state.location[0])
-    p1_y = int(state.location[2])
-    return math.sqrt((p1_x - 1)^2 + (p1_y - 1)^2)
+## a_star heuristic - return the straight-line distance between the state and the target, (8,8)
+def sld(location) :
+
+    p2_x = int(location[0])
+    p2_y = int(location[2])
+    return (((8 - p2_x) ** 2) + ((8 - p2_y) ** 2)) ** 0.5
 
 def read_mars_graph(filename) :
 
