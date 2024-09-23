@@ -51,7 +51,6 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
         ## this is a (state, "action") tuple
         next_state = search_queue.pop()
         if not check_depth_limit_reached or next_state[0].depth <= limit :
-            print("next_state depth = " + str(next_state[0].depth))
             if goal_test(next_state[0], subproblem):
                 print("Goal found")
                 print("Depth: " + str(next_state[0].depth))
