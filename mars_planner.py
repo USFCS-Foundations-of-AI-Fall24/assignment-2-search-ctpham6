@@ -19,8 +19,8 @@ from search_algorithms import depth_first_search
 
 class RoverState :
 
-    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False,
-                 prev=None, sample_dropped_off = False, depth = 0):
+    def __init__(self, loc = "station", sample_extracted = False, holding_sample = False, charged = False,
+                 holding_tool = False, prev = None, sample_dropped_off = False, depth = 0) :
         self.loc = loc
         self.sample_extracted = sample_extracted
         self.holding_sample = holding_sample
@@ -30,12 +30,12 @@ class RoverState :
         self.sample_dropped_off = sample_dropped_off
         self.depth = depth
 
-    def __eq__(self, other):
+    def __eq__(self, other) :
         return (self.loc == other.loc and self.sample_extracted == other.sample_extracted and
                 self.holding_sample == other.holding_sample and self.charged == other.charged and
                 self.holding_tool == other.holding_tool and self.sample_dropped_off == other.sample_dropped_off)
 
-    def __repr__(self):
+    def __repr__(self) :
         return (f"Location: {self.loc}\n" +
                 f"Sample Extracted?: {self.sample_extracted}\n"+
                 f"Holding Sample?: {self.holding_sample}\n" +
@@ -43,10 +43,10 @@ class RoverState :
                 f"Holding Tool?: {self.holding_tool}\n" +
                 f"Sample Dropped Off?: {self.sample_dropped_off}")
 
-    def __hash__(self):
+    def __hash__(self) :
         return self.__repr__().__hash__()
 
-    def successors(self, list_of_actions):
+    def successors(self, list_of_actions) :
 
         ## apply each function in the list of actions to the current state to get
         ## a new state.
@@ -118,7 +118,6 @@ def charge(state) :
         r2.charged = True
     r2.prev = state
     return r2
-
 
 action_list = [charge, drop_sample, pick_up_sample,
                move_to_sample, move_to_battery, move_to_station, pick_up_tool, drop_tool, use_tool]
