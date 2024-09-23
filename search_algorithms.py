@@ -8,10 +8,12 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
     states_generated = 0
     search_queue.append((startState,""))
 
+    # closed_list removes duplicate states
     if use_closed_list :
         closed_list[startState] = True
+    # while an answer could potentially be reachable...
     while len(search_queue) > 0 :
-        ## this is a (state, "action") tuple
+        # this is a (state, "action") tuple
         next_state = search_queue.popleft()
         if goal_test(next_state[0], subproblem) :
             print("Goal found")
@@ -38,6 +40,7 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
 
 ## use the limit parameter to implement depth-limited search
 def depth_first_search(startState, action_list, goal_test, use_closed_list=True,limit=0,subproblem=False) :
+
     search_queue = deque()
     closed_list = {}
     states_generated = 0
