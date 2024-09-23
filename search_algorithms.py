@@ -41,7 +41,6 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
     closed_list = {}
     states_generated = 0
     check_depth_limit_reached = False
-    depth = 0
 
     search_queue.append((startState,""))
     if use_closed_list :
@@ -51,28 +50,28 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
     while len(search_queue) > 0 :
         ## this is a (state, "action") tuple
         next_state = search_queue.pop()
-        if check_depth_limit_reached and next_state[0].depth > limit :
-            break
-        if goal_test(next_state[0], subproblem):
-            print("Goal found")
-            print("Depth: " + str(next_state[0].depth))
-            print("States Generated: " + str(states_generated))
-            print(next_state)
-            ptr = next_state[0]
-            while ptr is not None :
-                print("----------")
-                print(ptr)
-                ptr = ptr.prev
-            return next_state
-        else :
-            successors = next_state[0].successors(action_list)
-            if use_closed_list :
-                successors = [item for item in successors
-                                    if item[0] not in closed_list]
-                for s in successors :
-                    states_generated += 1
-                    closed_list[s[0]] = True
-            search_queue.extend(successors)
+        if not check_depth_limit_reached or next_state[0].depth <= limit :
+            print("next_state depth = " + str(next_state[0].depth))
+            if goal_test(next_state[0], subproblem):
+                print("Goal found")
+                print("Depth: " + str(next_state[0].depth))
+                print("States Generated: " + str(states_generated))
+                print(next_state)
+                ptr = next_state[0]
+                while ptr is not None :
+                    print("----------")
+                    print(ptr)
+                    ptr = ptr.prev
+                return next_state
+            else :
+                successors = next_state[0].successors(action_list)
+                if use_closed_list :
+                    successors = [item for item in successors
+                                        if item[0] not in closed_list]
+                    for s in successors :
+                        states_generated += 1
+                        closed_list[s[0]] = True
+                search_queue.extend(successors)
     print("Goal not found")
     print("Depth limit: " + str(limit))
     print("States Generated: " + str(states_generated))
