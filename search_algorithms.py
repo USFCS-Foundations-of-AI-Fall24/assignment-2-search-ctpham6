@@ -79,3 +79,4 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
     print("Goal not found")
     print("Depth limit: " + str(limit))
     print("States Generated: " + str(states_generated))
+    print("")
