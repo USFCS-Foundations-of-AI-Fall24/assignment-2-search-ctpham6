@@ -298,3 +298,4 @@ print("--------------------------------------------")
 print("Move To Battery Goal Depth")
 return_to_charger_goal_depth = depth_first_search(s_return_charger_goal, action_list, mission_complete,
                                               subproblem = "return_to_charger")
+print("")
