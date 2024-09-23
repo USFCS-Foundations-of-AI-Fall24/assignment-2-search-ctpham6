@@ -19,9 +19,9 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
             print("----------")
             ptr = next_state[0]
             while ptr is not None :
-                ptr = ptr.prev
                 print("----------")
                 print(ptr)
+                ptr = ptr.prev
             return next_state
         else :
             successors = next_state[0].successors(action_list)
@@ -51,21 +51,18 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
     while len(search_queue) > 0 :
         ## this is a (state, "action") tuple
         next_state = search_queue.pop()
-        depth += 1
-        if (check_depth_limit_reached and depth > limit) :
+        if check_depth_limit_reached and next_state[0].depth > limit :
             break
         if goal_test(next_state[0], subproblem):
-            if (check_depth_limit_reached) :
-                print("Goal found at depth of " + str(depth))
-            else :
-                print("Goal found")
+            print("Goal found")
+            print("Depth: " + str(next_state[0].depth))
             print("States Generated: " + str(states_generated))
             print(next_state)
             ptr = next_state[0]
             while ptr is not None :
-                ptr = ptr.prev
                 print("----------")
                 print(ptr)
+                ptr = ptr.prev
             return next_state
         else :
             successors = next_state[0].successors(action_list)
@@ -76,4 +73,6 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
                     states_generated += 1
                     closed_list[s[0]] = True
             search_queue.extend(successors)
+    print("Goal not found")
+    print("Depth limit: " + str(limit))
     print("States Generated: " + str(states_generated))
