@@ -119,7 +119,7 @@ def mission_complete(state, sub_problem = False) :
 if __name__=="__main__" :
 
     mars_map_state = map_state(location="1,1", mars_graph = read_mars_graph("MarsMap.txt"))
-    print("a*: ")
+    print("A*: ")
     a_star(mars_map_state, sld, mission_complete)
     print("")
     print("uniform cost search: ")
@@ -127,8 +127,9 @@ if __name__=="__main__" :
 
 # This block of code is for submission.py to run it
 mars_map_state = map_state(location="1,1", mars_graph = read_mars_graph("MarsMap.txt"))
-print("a*: ")
+print("A*: ")
 a_star(mars_map_state, sld, mission_complete)
 print("")
 print("uniform cost search: ")
 a_star(mars_map_state, h1, mission_complete)
+print("")
