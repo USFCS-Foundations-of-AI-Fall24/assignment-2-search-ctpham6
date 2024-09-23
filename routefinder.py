@@ -10,8 +10,7 @@ class map_state() :
     ## h = estimated cost to goal
     ## location = "1,1" means charger, the start point
     ## location = "8,8" means sample, the destination
-    def __init__(self, location="", mars_graph=None,
-                 prev_state=None, g=0,h=0):
+    def __init__(self, location = "", mars_graph = None, prev_state = None, g = 0, h = 0) :
         self.location = location
         self.mars_graph = mars_graph
         self.prev_state = prev_state
@@ -58,7 +57,7 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True, ucs = Fal
             print("States Generated: " + str(states_generated))
             return next_state
         else :
-            for edge in next_state.mars_graph.get_edges(next_state.location):
+            for edge in next_state.mars_graph.get_edges(next_state.location) :
                 state_to_enqueue = map_state(location=edge.dest, mars_graph=next_state.mars_graph, prev_state=next_state,
                                                  g=1, h=heuristic_fn(next_state))
                 if use_closed_list :
@@ -85,18 +84,18 @@ def sld(state) :
     p1_y = int(state.location[2])
     return math.sqrt((p1_x - 1)^2 + (p1_y - 1)^2)
 
-def read_mars_graph(filename):
+def read_mars_graph(filename) :
 
     try :
         map_file = open(filename)
         mars_graph = Graph()
-        for line in map_file:
+        for line in map_file :
             node_string = line.split(":")[0]
             node = Node(val = node_string)
             edge_array = line.split(" ")
             edge_array.pop(0)
             mars_graph.add_node(node.value)
-            for edge_string in edge_array:
+            for edge_string in edge_array :
                 edge = Edge(src = node.value, dest = edge_string.strip(), val = 1)
                 mars_graph.add_edge(edge)
         map_file.close()
