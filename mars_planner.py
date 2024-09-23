@@ -20,7 +20,7 @@ from search_algorithms import depth_first_search
 class RoverState :
 
     def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False,
-                 prev=None, sample_dropped_off = False, depth = 1):
+                 prev=None, sample_dropped_off = False, depth = 0):
         self.loc = loc
         self.sample_extracted = sample_extracted
         self.holding_sample = holding_sample
@@ -28,6 +28,7 @@ class RoverState :
         self.prev = prev
         self.holding_tool = holding_tool
         self.sample_dropped_off = sample_dropped_off
+        self.depth = depth
 
     def __eq__(self, other):
         return (self.loc == other.loc and self.sample_extracted == other.sample_extracted and
@@ -53,6 +54,8 @@ class RoverState :
         succ = [(item(self), item.__name__) for item in list_of_actions]
         ## remove actions that have no effect
         succ = [item for item in succ if not item[0] == self]
+        for s in succ:
+            s[0].depth += 1
         return succ
 
 ## our actions will be functions that return a new state.
@@ -171,13 +174,13 @@ if __name__=="__main__" :
     result_depth = depth_first_search(s, action_list, mission_complete)
     print("--------------------------------------------")
     print("Move To Sample Goal Depth")
-    move_sample_goal_depth = breadth_first_search(s_move_sample_goal, action_list, mission_complete,
+    move_sample_goal_depth = depth_first_search(s_move_sample_goal, action_list, mission_complete,
                                                   subproblem = "move_to_sample")
     print("--------------------------------------------")
     print("Remove Sample Goal Depth")
-    remove_sample_goal_depth = breadth_first_search(s_remove_sample_goal, action_list, mission_complete,
+    remove_sample_goal_depth = depth_first_search(s_remove_sample_goal, action_list, mission_complete,
                                                       subproblem = "remove_sample")
     print("--------------------------------------------")
     print("Move To Battery Goal Depth")
-    return_to_charger_goal_depth = breadth_first_search(s_return_charger_goal, action_list, mission_complete,
+    return_to_charger_goal_depth = depth_first_search(s_return_charger_goal, action_list, mission_complete,
                                                   subproblem = "return_to_charger")
