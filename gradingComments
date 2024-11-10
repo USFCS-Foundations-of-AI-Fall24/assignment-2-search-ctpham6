@@ -1,0 +1,41 @@
+Assignment 2 comments:
+
+Question 1: Algorithms. 6/10
+BFS and UCS are optimal. (this means that they will eventually find 
+the best solution) 
+Your time complexity for IDS is off - it's easier to express in terms
+of b & d.
+
+Question 2:
+
+eq: 5/5
+
+goal: 5/5
+
+BFS/DFS: 5/5
+
+DLS: 9/10 - you want depth to be parent depth +1 - you could do this in
+successors.
+
+tools: 10/10
+
+decomposition: 10/10
+
+Question 3:
+
+read_mars_graph: 5/5
+
+A*: 12/15
+you're setting g to 1 for each state. It should be parent.g + 1.
+
+count states: 5/5
+
+Question 4: 10/10
+
+Question 5: 10/10
+
+92/100
+
+
+
+
